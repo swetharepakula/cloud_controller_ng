@@ -69,7 +69,7 @@ resource 'Apps (Experimental)', type: :api do
           'next'          => { 'href' => "/v3/apps?order_by=#{order_by}&page=2&per_page=2" },
           'previous'      => nil,
         },
-        'resources'  => [
+        'resources' => [
           {
             'name'                    => name3,
             'guid'                    => app_model3.guid,
@@ -212,7 +212,7 @@ resource 'Apps (Experimental)', type: :api do
             'stack'     => app_model.lifecycle_data.stack,
           }
         },
-        'links'                   => {
+        'links' => {
           'self'                   => { 'href' => "/v3/apps/#{guid}" },
           'processes'              => { 'href' => "/v3/apps/#{guid}/processes" },
           'packages'               => { 'href' => "/v3/apps/#{guid}/packages" },
@@ -473,7 +473,7 @@ resource 'Apps (Experimental)', type: :api do
       })
 
       metadata_request = { 'name' => 'new_name', 'environment_variables' => 'PRIVATE DATA HIDDEN',
-                           'lifecycle'               => { 'type' => 'buildpack', 'data' => { 'buildpack' => buildpack, 'stack' => stack.name } } }
+                           'lifecycle' => { 'type' => 'buildpack', 'data' => { 'buildpack' => buildpack, 'stack' => stack.name } } }
       expect(event.metadata['request']).to eq(metadata_request)
     end
   end
@@ -550,7 +550,7 @@ resource 'Apps (Experimental)', type: :api do
             'stack'     => app_model.lifecycle_data.stack,
           }
         },
-        'links'                   => {
+        'links' => {
           'self'                   => { 'href' => "/v3/apps/#{app_model.guid}" },
           'processes'              => { 'href' => "/v3/apps/#{app_model.guid}/processes" },
           'packages'               => { 'href' => "/v3/apps/#{app_model.guid}/packages" },
@@ -619,7 +619,7 @@ resource 'Apps (Experimental)', type: :api do
             'stack'     => app_model.lifecycle_data.stack,
           }
         },
-        'links'                   => {
+        'links' => {
           'self'                   => { 'href' => "/v3/apps/#{app_model.guid}" },
           'processes'              => { 'href' => "/v3/apps/#{app_model.guid}/processes" },
           'packages'               => { 'href' => "/v3/apps/#{app_model.guid}/packages" },
@@ -682,10 +682,10 @@ resource 'Apps (Experimental)', type: :api do
       do_request_with_error_handling
 
       expected_response = {
-        'staging_env_json'      => {
+        'staging_env_json' => {
           'STAGING_ENV' => 'staging_value'
         },
-        'running_env_json'      => {
+        'running_env_json' => {
           'RUNNING_ENV' => 'running_value'
         },
         'environment_variables' => {
@@ -708,7 +708,7 @@ resource 'Apps (Experimental)', type: :api do
         },
         'application_env_json'  => {
           'VCAP_APPLICATION' => {
-            'limits'           => {
+            'limits' => {
               # 'mem' => 1024,
               # 'disk' => 1024,
               'fds' => 16384
@@ -771,7 +771,7 @@ resource 'Apps (Experimental)', type: :api do
             'stack'     => app_model.lifecycle_data.stack,
           }
         },
-        'links'                   => {
+        'links' => {
           'self'                   => { 'href' => "/v3/apps/#{app_model.guid}" },
           'processes'              => { 'href' => "/v3/apps/#{app_model.guid}/processes" },
           'packages'               => { 'href' => "/v3/apps/#{app_model.guid}/packages" },

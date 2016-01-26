@@ -20,7 +20,7 @@ class FakeServiceBrokerV2Client
 
   def provision(instance, arbitrary_parameters: {}, accepts_incomplete: false)
     {
-      instance:       {
+      instance: {
         credentials:   {},
         dashboard_url: nil
       },

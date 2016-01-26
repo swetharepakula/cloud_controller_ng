@@ -47,7 +47,7 @@ resource 'Processes (Experimental)', type: :api do
           'next'          => { 'href' => '/v3/processes?page=2&per_page=2' },
           'previous'      => nil,
         },
-        'resources'  => [
+        'resources' => [
           {
             'guid'         => process1.guid,
             'type'         => process1.type,
@@ -57,7 +57,7 @@ resource 'Processes (Experimental)', type: :api do
             'disk_in_mb' => 1024,
             'created_at'   => iso8601,
             'updated_at'   => iso8601,
-            'links'       => {
+            'links' => {
               'self'  => { 'href' => "/v3/processes/#{process1.guid}" },
               'scale' => { 'href' => "/v3/processes/#{process1.guid}/scale", 'method' => 'PUT' },
               'app'   => { 'href' => "/v3/apps/#{app_model.guid}" },
@@ -73,7 +73,7 @@ resource 'Processes (Experimental)', type: :api do
             'disk_in_mb' => 1024,
             'created_at'   => iso8601,
             'updated_at'   => iso8601,
-            'links'       => {
+            'links' => {
               'self'  => { 'href' => "/v3/processes/#{process2.guid}" },
               'scale' => { 'href' => "/v3/processes/#{process2.guid}/scale", 'method' => 'PUT' },
               'app'   => { 'href' => "/v3/apps/#{process2.app_guid}" },
@@ -115,7 +115,7 @@ resource 'Processes (Experimental)', type: :api do
         'disk_in_mb' => 1024,
         'created_at'   => iso8601,
         'updated_at'   => iso8601,
-        'links'       => {
+        'links' => {
           'self'  => { 'href' => "/v3/processes/#{process.guid}" },
           'scale' => { 'href' => "/v3/processes/#{process.guid}/scale", 'method' => 'PUT' },
           'app'   => { 'href' => "/v3/apps/#{process.app_guid}" },
@@ -164,7 +164,7 @@ resource 'Processes (Experimental)', type: :api do
         'disk_in_mb' => 1024,
         'created_at'   => iso8601,
         'updated_at'   => iso8601,
-        'links'       => {
+        'links' => {
           'self'  => { 'href' => "/v3/processes/#{process.guid}" },
           'scale' => { 'href' => "/v3/processes/#{process.guid}/scale", 'method' => 'PUT' },
           'app'   => { 'href' => "/v3/apps/#{process.app_guid}" },
@@ -215,7 +215,7 @@ resource 'Processes (Experimental)', type: :api do
         'disk_in_mb' => disk_in_mb,
         'created_at'   => iso8601,
         'updated_at'   => iso8601,
-        'links'       => {
+        'links' => {
           'self'  => { 'href' => "/v3/processes/#{process.guid}" },
           'scale' => { 'href' => "/v3/processes/#{process.guid}/scale", 'method' => 'PUT' },
           'app'   => { 'href' => "/v3/apps/#{process.app_guid}" },
@@ -271,7 +271,7 @@ resource 'Processes (Experimental)', type: :api do
           'next'          => nil,
           'previous'      => nil,
         },
-        'resources'  => [{
+        'resources' => [{
           'type' => process.type,
           'index' => 0,
           'state' => 'RUNNING',
