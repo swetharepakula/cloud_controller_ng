@@ -9,7 +9,7 @@ module VCAP::CloudController
     end
 
     def present_json_list(paginated_result, base_url)
-      routes      = paginated_result.records
+      routes = paginated_result.records
       route_hashes = routes.collect { |route| route_hash(route) }
 
       paginated_response = {
