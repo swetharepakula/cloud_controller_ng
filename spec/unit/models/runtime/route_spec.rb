@@ -107,6 +107,66 @@ module VCAP::CloudController
       it { is_expected.to validate_presence :space }
       it { is_expected.to validate_presence :host }
 
+      context 'when a route with the same hostname and domain already exists' do
+        let(:domain) { SharedDomain.make }
+        let(:space) { Space.make }
+        let(:host) { 'example' }
+
+        context 'with a context path' do
+          let(:path) { '/foo' }
+
+          before do
+            Route.make(domain: domain, space: space, host: host)
+          end
+
+          it 'is valid' do
+            route_obj = Route.new(domain: domain, host: host, space: space, path: path)
+            expect(route_obj).to be_valid
+          end
+
+          context 'and a user attempts to create the route in another space' do
+            let(:another_space) { Space.make }
+
+            it 'is not valid' do
+              route_obj = Route.new(domain: domain, space: another_space, host: host, path: path)
+              expect(route_obj).not_to be_valid
+              expect(route_obj.errors.on([:domain_id, :host])).to include :host_and_domain_taken_different_space
+            end
+          end
+
+          context 'and the domain is a private domain' do
+            let(:domain) { PrivateDomain.make }
+            let(:space) { Space.make(organization: domain.owning_organization) }
+
+            context 'and a user attempts to create the route in another space' do
+              let(:another_space) { Space.make(organization: domain.owning_organization) }
+
+              it 'is valid' do
+                route_obj = Route.new(domain: domain, space: another_space, host: host, path: path)
+                expect(route_obj).to be_valid
+              end
+            end
+          end
+        end
+
+        context 'without a context path' do
+
+          before do
+            Route.make(domain: domain, space: space, host: host, path: '/bar')
+          end
+
+          context 'and a user attempts to create the route in another space' do
+            let(:another_space) { Space.make }
+
+            it 'is not valid' do
+              route_obj = Route.new(domain: domain, space: another_space, host: host)
+              expect(route_obj).not_to be_valid
+              expect(route_obj.errors.on([:domain_id, :host])).to include :host_and_domain_taken_different_space
+            end
+          end
+        end
+      end
+
       context 'route ports' do
         let(:domain) { SharedDomain.make }
         let(:route) { Route.make(domain: domain, host: '', port: 1) }
@@ -143,7 +203,7 @@ module VCAP::CloudController
           it 'validates the uniqueness of the port' do
             new_route = Route.new(port: 1, host: '', domain: domain)
             expect(new_route).not_to be_valid
-            expect(new_route.errors.on([:domain_id, :port])).to include :unique
+            expect(new_route.errors.on([:host, :domain_id, :port])).to include :unique
           end
         end
       end
