@@ -110,6 +110,10 @@ module VCAP::CloudController
           }.to raise_error(Sequel::ValidationFailed, /name presence/)
         end
       end
+
+      describe 'memory_in_mb' do
+        it 'defaults to '
+      end
     end
   end
 end
