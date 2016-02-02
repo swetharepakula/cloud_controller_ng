@@ -5,6 +5,7 @@ AllCops:
   Exclude:
     - vendor/**/*
     - db/migrations/**/*
+  TargetRubyVersion: 2.2
 
 UnusedMethodArgument:
   Enabled: false
@@ -39,7 +40,10 @@ Style/ClassAndModuleChildren:
 Style/BlockDelimiters:
   Enabled: false
 
-Style/TrailingComma:
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+Style/TrailingCommaInLiteral:
   Enabled: false
 
 Style/BracesAroundHashParameters:
@@ -144,3 +148,10 @@ ModuleLength:
 
 Style/TrailingUnderscoreVariable:
   Enabled: false
+
+Style/IndentArray:
+  Enabled: false
+
+Performance/RedundantBlockCall:
+  Enabled: false
+

@@ -9,7 +9,7 @@ module CloudController
         let(:blobstore_type) { nil }
 
         before do
-          options.merge!(fog_connection: {})
+          options[:fog_connection] = {}
         end
 
         it 'provides a fog client' do
@@ -23,7 +23,7 @@ module CloudController
         let(:blobstore_type) { 'fog' }
 
         before do
-          options.merge!(fog_connection: {})
+          options[:fog_connection] = {}
         end
 
         it 'provides a fog client' do
@@ -34,7 +34,7 @@ module CloudController
 
         context 'when a cdn is requested in the options' do
           before do
-            options.merge!(cdn: { uri: 'http://cdn.com' })
+            options[:cdn] = { uri: 'http://cdn.com' }
           end
 
           it 'sets up a cdn for the fog client' do
@@ -59,7 +59,7 @@ module CloudController
         let(:blobstore_type) { 'webdav' }
 
         before do
-          options.merge!(webdav_config: {})
+          options[:webdav_config] = {}
         end
 
         it 'provides a webdav client' do

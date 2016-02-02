@@ -6,7 +6,7 @@ module VCAP::RestAPI
   # a Membrane based json validator on a per request type basis.
   class NamedAttribute
     attr_reader :name, :default, :has_default
-    alias_method :has_default?, :has_default
+    alias has_default? has_default
 
     # Create a NamedAttribute.  By default, the attribute is considered to
     # be required.

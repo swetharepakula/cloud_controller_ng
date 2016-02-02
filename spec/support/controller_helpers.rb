@@ -18,7 +18,7 @@ module ControllerHelpers
     { protocol: 'http',  config_setting: :https_required_for_admins, user: 'admin', success: false },
     { protocol: 'https', config_setting: :https_required_for_admins, user: 'user',  success: true },
     { protocol: 'https', config_setting: :https_required_for_admins, user: 'admin', success: true }
-  ]
+  ].freeze
 
   def self.description_for_inline_depth(depth, pagination=50)
     if depth
@@ -105,7 +105,7 @@ module ControllerHelpers
     parse(last_response.body, options)
   end
 
-  alias_method :parsed_response, :decoded_response
+  alias parsed_response decoded_response
 
   def parse(json, options={})
     MultiJson.load(json, options)
@@ -133,6 +133,6 @@ module ControllerHelpers
   end
 
   def iso8601
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.freeze
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
   end
 end

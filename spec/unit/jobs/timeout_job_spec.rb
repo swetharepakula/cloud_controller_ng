@@ -87,9 +87,7 @@ module VCAP::CloudController::Jobs
         let(:overridden_timeout) { 5.minutes }
 
         before do
-          config[:jobs].merge!(app_bits_packer: {
-                                 timeout_in_seconds: overridden_timeout
-          })
+          config[:jobs][:app_bits_packer] = { timeout_in_seconds: overridden_timeout }
         end
 
         it 'uses the overridden timeout' do

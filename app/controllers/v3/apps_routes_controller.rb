@@ -56,7 +56,7 @@ class AppsRoutesController < ApplicationController
   def can_write?(space_guid)
     roles.admin? || membership.has_any_roles?([Membership::SPACE_DEVELOPER], space_guid)
   end
-  alias_method :can_delete?, :can_write?
+  alias can_delete? can_write?
 
   def route_not_found!
     resource_not_found!(:route)

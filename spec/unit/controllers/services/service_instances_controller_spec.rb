@@ -413,7 +413,7 @@ module VCAP::CloudController
               expect(last_response).to have_status_code(201)
               expect(a_request(:put, service_broker_url_regex).
                      with(body: hash_including(parameters: parameters))).
-              to have_been_made.times(1)
+                to have_been_made.times(1)
             end
           end
 
@@ -424,7 +424,7 @@ module VCAP::CloudController
               expect(last_response).to have_status_code(400)
               expect(a_request(:put, service_broker_url_regex).
                      with(body: hash_including(parameters: parameters))).
-              to have_been_made.times(0)
+                to have_been_made.times(0)
               expect(last_response.body).to include('Error: Expected instance of Hash')
             end
           end
@@ -1121,7 +1121,7 @@ module VCAP::CloudController
 
       context 'when the request is synchronous' do
         before do
-          stub_request(:patch, "#{service_broker_url}").
+          stub_request(:patch, service_broker_url.to_s).
             to_return(status: status, body: response_body)
         end
 
@@ -1194,7 +1194,7 @@ module VCAP::CloudController
               expect(last_response).to have_status_code(400)
               expect(a_request(:put, service_broker_url_regex).
                      with(body: hash_including(parameters: parameters))).
-              to have_been_made.times(0)
+                to have_been_made.times(0)
             end
           end
 
@@ -2665,7 +2665,7 @@ module VCAP::CloudController
             expect(last_response).to have_status_code(201)
             expect(a_request(:put, service_binding_uri).
                        with(body: hash_including(parameters: parameters))).
-                to have_been_made.times(1)
+              to have_been_made.times(1)
           end
         end
 
@@ -2677,7 +2677,7 @@ module VCAP::CloudController
             expect(last_response.body).to include('Expected instance of Hash, given an instance of String')
             expect(a_request(:put, service_broker_url_regex).
                        with(body: hash_including(parameters: parameters))).
-                to have_been_made.times(0)
+              to have_been_made.times(0)
           end
         end
       end

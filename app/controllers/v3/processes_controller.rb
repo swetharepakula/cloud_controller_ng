@@ -107,9 +107,9 @@ class ProcessesController < ApplicationController
   def can_update?(space_guid)
     roles.admin? || membership.has_any_roles?([Membership::SPACE_DEVELOPER], space_guid)
   end
-  alias_method :can_terminate?, :can_update?
-  alias_method :can_scale?, :can_update?
-  alias_method :can_stats?, :can_update?
+  alias can_terminate? can_update?
+  alias can_scale? can_update?
+  alias can_stats? can_update?
 
   def instance_not_found!
     resource_not_found!(:instance)

@@ -185,11 +185,11 @@ class AppsV3Controller < ApplicationController
     roles.admin? ||
       membership.has_any_roles?([Membership::SPACE_DEVELOPER], space_guid)
   end
-  alias_method :can_update?, :can_create?
-  alias_method :can_delete?, :can_create?
-  alias_method :can_start?, :can_create?
-  alias_method :can_stop?, :can_create?
-  alias_method :can_read_envs?, :can_create?
+  alias can_update? can_create?
+  alias can_delete? can_create?
+  alias can_start? can_create?
+  alias can_stop? can_create?
+  alias can_read_envs? can_create?
 
   def droplet_not_found!
     resource_not_found!(:droplet)

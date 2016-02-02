@@ -110,13 +110,12 @@ module Sinatra
       end
     end
 
-    private
-
     def self.init_varz
       ::VCAP::Component.varz.synchronize do
         ::VCAP::Component.varz[:vcap_sinatra] ||= {}
         ::VCAP::Component.varz[:vcap_sinatra][:recent_errors] = ::VCAP::RingBuffer.new(50)
       end
     end
+    private_class_method :init_varz
   end
 end

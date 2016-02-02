@@ -1,7 +1,7 @@
 module VCAP::CloudController
   module Diego
     class StagingCompletionHandlerBase
-      DEFAULT_STAGING_ERROR = 'StagingError'
+      DEFAULT_STAGING_ERROR = 'StagingError'.freeze
 
       def initialize(runners, logger, logger_prefix)
         @runners = runners
@@ -16,6 +16,17 @@ module VCAP::CloudController
           handle_failure(entity_or_id, payload)
         else
           handle_success(entity_or_id, payload)
+        end
+      end
+
+      def self.error_parser
+        @error_schema ||= Membrane::SchemaParser.parse do
+          {
+            error: {
+              id: String,
+              message: String,
+            },
+          }
         end
       end
 
@@ -88,17 +99,6 @@ module VCAP::CloudController
         end
 
         true
-      end
-
-      def self.error_parser
-        @error_schema ||= Membrane::SchemaParser.parse do
-          {
-            error: {
-              id: String,
-              message: String,
-            },
-          }
-        end
       end
 
       attr_reader :logger

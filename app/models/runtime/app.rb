@@ -25,7 +25,7 @@ module VCAP::CloudController
     end
 
     DEFAULT_PORTS = [8080].freeze
-    APP_NAME_REGEX = /\A[[:alnum:][:punct:][:print:]]+\Z/.freeze
+    APP_NAME_REGEX = /\A[[:alnum:][:punct:][:print:]]+\Z/
 
     one_to_many :droplets
     one_to_many :service_bindings
@@ -83,7 +83,7 @@ module VCAP::CloudController
     # Last staging response which will contain streaming log url
     attr_accessor :last_stager_response
 
-    alias_method :diego?, :diego
+    alias diego? diego
 
     def copy_buildpack_errors
       bp = buildpack
@@ -616,11 +616,11 @@ module VCAP::CloudController
     end
 
     def to_hash(opts={})
-      if VCAP::CloudController::SecurityContext.admin? || space.has_developer?(VCAP::CloudController::SecurityContext.current_user)
-        opts.merge!(redact: %w(docker_credentials_json))
-      else
-        opts.merge!(redact: %w(environment_json system_env_json docker_credentials_json))
-      end
+      opts[:redact] = if VCAP::CloudController::SecurityContext.admin? || space.has_developer?(VCAP::CloudController::SecurityContext.current_user)
+                        %w(docker_credentials_json)
+                      else
+                        %w(environment_json system_env_json docker_credentials_json)
+                      end
       super(opts)
     end
 

@@ -49,8 +49,8 @@ module VCAP::CloudController
     end
 
     def to_hash(opts={})
-      if !VCAP::CloudController::SecurityContext.admin? && !app.space.has_developer?(VCAP::CloudController::SecurityContext.current_user)
-        opts.merge!({ redact: ['credentials'] })
+      unless VCAP::CloudController::SecurityContext.admin? || app.space.has_developer?(VCAP::CloudController::SecurityContext.current_user)
+        opts[:redact] = ['credentials']
       end
       super(opts)
     end
@@ -103,7 +103,7 @@ module VCAP::CloudController
       @logger ||= Steno.logger('cc.models.service_binding')
     end
 
-    DEFAULT_BINDING_OPTIONS = '{}'
+    DEFAULT_BINDING_OPTIONS = '{}'.freeze
 
     def binding_options
       MultiJson.load(super || DEFAULT_BINDING_OPTIONS)

@@ -3,7 +3,7 @@ module Rack
     class Session
       private
 
-      alias_method :orig_env_for, :env_for
+      alias orig_env_for env_for
       def env_for(path, env)
         params = env[:params]
         new_env = orig_env_for(path, env)

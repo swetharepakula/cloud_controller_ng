@@ -4,16 +4,13 @@ module VCAP::Services
       module Errors
         class ServiceBrokerRequestRejected < HttpResponseError
           def initialize(uri, method, response)
-            begin
-              hash = MultiJson.load(response.body)
-            rescue MultiJson::ParseError
-            end
+            hash = suppress(MultiJson::ParseError) { MultiJson.load(response.body) }
 
-            if hash.is_a?(Hash) && hash.key?('description')
-              message = "Service broker error: #{hash['description']}"
-            else
-              message = "The service broker rejected the request to #{uri}. Status Code: #{response.code} #{response.message}, Body: #{response.body}"
-            end
+            message = if hash.is_a?(Hash) && hash.key?('description')
+                        "Service broker error: #{hash['description']}"
+                      else
+                        "The service broker rejected the request to #{uri}. Status Code: #{response.code} #{response.message}, Body: #{response.body}"
+                      end
 
             super(message, uri, method, response)
           end

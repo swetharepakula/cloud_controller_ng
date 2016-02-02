@@ -2,11 +2,12 @@ module VCAP::CloudController
   class DeleteRouteFetcher
     def fetch(app_guid, route_guid)
       app = AppModel.
-        where(guid: app_guid).
-        eager(
-          :space,
-          space: :organization,
-          routes: proc { |ds| ds.where(guid: route_guid) }).all.first
+            where(guid: app_guid).
+            eager(
+              :space,
+              space: :organization,
+              routes: proc { |ds| ds.where(guid: route_guid) }
+            ).all.first
 
       return nil if app.nil?
 

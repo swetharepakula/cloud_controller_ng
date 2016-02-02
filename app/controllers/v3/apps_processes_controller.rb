@@ -91,8 +91,8 @@ class AppsProcessesController < ApplicationController
     roles.admin? ||
     membership.has_any_roles?([Membership::SPACE_DEVELOPER], space_guid)
   end
-  alias_method :can_terminate?, :can_scale?
-  alias_method :can_stats?, :can_scale?
+  alias can_terminate? can_scale?
+  alias can_stats? can_scale?
 
   def process_not_found!
     resource_not_found!(:process)

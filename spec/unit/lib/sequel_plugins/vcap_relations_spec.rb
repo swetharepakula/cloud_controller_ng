@@ -359,7 +359,7 @@ describe 'Sequel::Plugins::VcapRelations' do
     end
 
     let!(:bottoms) do
-      10.times.collect do
+      Array.new(10) do
         bottom_klass.create
       end
     end
@@ -402,7 +402,7 @@ describe 'Sequel::Plugins::VcapRelations' do
     let!(:other_middle) { middle_klass.create(guid: 'other_middle_guid') }
 
     let!(:bottoms) do
-      10.times.collect do
+      Array.new(10) do
         bottom_klass.create(middle: middle)
       end
     end

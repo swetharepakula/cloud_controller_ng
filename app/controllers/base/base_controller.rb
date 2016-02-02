@@ -6,7 +6,7 @@ require 'cloud_controller/security/access_context'
 module VCAP::CloudController::RestController
   # The base class for all api endpoints.
   class BaseController
-    V2_ROUTE_PREFIX = '/v2'
+    V2_ROUTE_PREFIX = '/v2'.freeze
 
     include VCAP::CloudController
     include VCAP::Errors
@@ -277,7 +277,7 @@ module VCAP::CloudController::RestController
       def authenticate_basic_auth(path, &block)
         controller.before path do
           auth = Rack::Auth::Basic::Request.new(env)
-          unless auth.provided? && auth.basic? && auth.credentials == block.call
+          unless auth.provided? && auth.basic? && auth.credentials == yield
             raise Errors::ApiError.new_from_details('NotAuthenticated')
           end
         end

@@ -52,7 +52,7 @@ module VCAP::CloudController
     end
 
     def self.current_user_has_email?(email)
-      current_user_email && current_user_email.downcase == email.downcase
+      current_user_email && (current_user_email.casecmp(email) == 0)
     end
   end
 end

@@ -93,7 +93,7 @@ module VCAP::CloudController
       end
 
       service_instance = ServiceInstanceCreate.new(@services_event_repository, logger).
-                             create(request_attrs, accepts_incomplete)
+                         create(request_attrs, accepts_incomplete)
 
       route_service_warning(service_instance) unless route_services_enabled?
 
@@ -228,11 +228,11 @@ module VCAP::CloudController
     def add_related(guid, name, other_guid)
       return super(guid, name, other_guid) if name != :routes
 
-      if body.string.blank?
-        req_body = '{}'
-      else
-        req_body = body
-      end
+      req_body = if body.string.blank?
+                   '{}'
+                 else
+                   body
+                 end
 
       json_msg = VCAP::CloudController::RouteBindingMessage.decode(req_body)
       @request_attrs = json_msg.extract(stringify_keys: true)
@@ -411,11 +411,10 @@ module VCAP::CloudController
 
     def status_from_operation_state(service_instance)
       if service_instance.last_operation.state == 'in progress'
-        state = HTTP::ACCEPTED
+        HTTP::ACCEPTED
       else
-        state = HTTP::CREATED
+        HTTP::CREATED
       end
-      state
     end
 
     def convert_flag_to_bool(flag)
@@ -426,19 +425,20 @@ module VCAP::CloudController
     def self.errors_on(e, fields)
       e.errors.on(fields).to_a
     end
+    private_class_method :errors_on
 
     def select_spaces_based_on_org_filters(org_filters)
       space_ids = Space.select(:spaces__id).left_join(:organizations, id: :spaces__organization_id)
       org_filters.each do |_, comparison, value|
-        if value.blank?
-          space_ids = space_ids.where(organizations__guid: nil)
-        elsif comparison == ':'
-          space_ids = space_ids.where(organizations__guid: value)
-        elsif comparison == ' IN '
-          space_ids = space_ids.where(organizations__guid: value.split(','))
-        else
-          space_ids = space_ids.where("organizations.guid #{comparison} ?", value)
-        end
+        space_ids = if value.blank?
+                      space_ids.where(organizations__guid: nil)
+                    elsif comparison == ':'
+                      space_ids.where(organizations__guid: value)
+                    elsif comparison == ' IN '
+                      space_ids.where(organizations__guid: value.split(','))
+                    else
+                      space_ids.where("organizations.guid #{comparison} ?", value)
+                    end
       end
 
       space_ids

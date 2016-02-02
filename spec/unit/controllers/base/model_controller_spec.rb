@@ -321,7 +321,7 @@ module VCAP::CloudController
               Delayed::Worker.new.work_off if Delayed::Job.last
             end
 
-            before { params.merge!('recursive' => 'true') }
+            before { params['recursive'] = 'true' }
 
             it 'successfully deletes' do
               expect {

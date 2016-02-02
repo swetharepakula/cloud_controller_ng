@@ -133,13 +133,12 @@ module VCAP::CloudController
       domain = Domain[guid: domain_guid]
       if domain
         path = params['path']
-        count = 0
 
-        if path.nil?
-          count = Route.where(domain: domain, host: host).count
-        else
-          count = Route.where(domain: domain, host: host, path: path).count
-        end
+        count = if path.nil?
+                  Route.where(domain: domain, host: host).count
+                else
+                  Route.where(domain: domain, host: host, path: path).count
+                end
 
         return [HTTP::NO_CONTENT, nil] if count > 0
       end

@@ -13,7 +13,7 @@ describe ErrorsController, type: :controller do
 
   describe '#internal_error' do
     before do
-      @request.env.merge!('action_dispatch.exception' => StandardError.new('sad things'))
+      @request.env['action_dispatch.exception'] = StandardError.new('sad things')
     end
 
     it 'returns the error from the request env in action_dispatch.exception' do

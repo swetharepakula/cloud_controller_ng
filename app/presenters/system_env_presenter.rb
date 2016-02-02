@@ -14,7 +14,7 @@ class SystemEnvPresenter
   def service_binding_env_variables(service_bindings)
     services_hash = {}
     service_bindings.each do |service_binding|
-      service_name                = service_binding_label(service_binding)
+      service_name = service_binding_label(service_binding)
       services_hash[service_name] ||= []
       services_hash[service_name] << service_binding_env_values(service_binding)
     end
@@ -29,11 +29,11 @@ class SystemEnvPresenter
   end
 
   def service_instance_presenter(service_instance)
-    if service_instance.is_gateway_service
-      @presenter = ManagedPresenter.new(service_instance)
-    else
-      @presenter = ProvidedPresenter.new(service_instance)
-    end
+    @presenter = if service_instance.is_gateway_service
+                   ManagedPresenter.new(service_instance)
+                 else
+                   ProvidedPresenter.new(service_instance)
+                 end
   end
 
   def service_binding_label(service_binding)

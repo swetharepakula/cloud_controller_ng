@@ -2,7 +2,7 @@ require 'actions/services/locks/updater_lock'
 
 module VCAP::CloudController
   class ServiceInstanceUpdate
-    KEYS_TO_UPDATE_CC_ONLY = %w(tags name space_guid)
+    KEYS_TO_UPDATE_CC_ONLY = %w(tags name space_guid).freeze
 
     def initialize(accepts_incomplete: false, services_event_repository: nil)
       @accepts_incomplete = accepts_incomplete
@@ -58,11 +58,11 @@ module VCAP::CloudController
     end
 
     def update_broker(accepts_incomplete, request_attrs, service_instance, previous_values)
-      if request_attrs.key?('service_plan_guid')
-        service_plan = ServicePlan.find(guid: request_attrs['service_plan_guid'])
-      else
-        service_plan = service_instance.service_plan
-      end
+      service_plan = if request_attrs.key?('service_plan_guid')
+                       ServicePlan.find(guid: request_attrs['service_plan_guid'])
+                     else
+                       service_instance.service_plan
+                     end
 
       response, err = service_instance.client.update(
         service_instance,

@@ -316,9 +316,7 @@ module VCAP::CloudController
           with('dea.find.droplet', encoded, { result_count: 5, timeout: 10 }).
           and_return([instance_json, instance_json])
 
-        expect(Dea::Client.find_instances(app, { other_opt: 'value' },
-                                   { result_count: 5, timeout: 10 })).
-                                   to eq(['instance', 'instance'])
+        expect(Dea::Client.find_instances(app, { other_opt: 'value' }, { result_count: 5, timeout: 10 })).to eq(['instance', 'instance'])
       end
     end
 
@@ -841,11 +839,11 @@ module VCAP::CloudController
           expect(dea_pool).to receive(:reserve_app_memory).with('def', app.memory)
           expect(dea_pool).to receive(:reserve_app_memory).with('efg', app.memory)
           expect(stager_pool).
-              to receive(:reserve_app_memory).with('abc', app.memory)
+            to receive(:reserve_app_memory).with('abc', app.memory)
           expect(stager_pool).
-              to receive(:reserve_app_memory).with('def', app.memory)
+            to receive(:reserve_app_memory).with('def', app.memory)
           expect(stager_pool).
-              to receive(:reserve_app_memory).with('efg', app.memory)
+            to receive(:reserve_app_memory).with('efg', app.memory)
 
           expect(message_bus).to receive(:publish).with('dea.abc.start', kind_of(Hash))
           expect(message_bus).to receive(:publish).with('dea.def.start', kind_of(Hash))

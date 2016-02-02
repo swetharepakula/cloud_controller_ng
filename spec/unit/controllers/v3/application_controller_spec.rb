@@ -36,7 +36,7 @@ describe ApplicationController, type: :controller do
 
     context 'when an invalid auth token is provided' do
       before do
-        @request.env.merge!('HTTP_AUTHORIZATION' => 'bearer potato')
+        @request.env['HTTP_AUTHORIZATION'] = 'bearer potato'
       end
 
       it 'sets the token to invalid' do
@@ -122,7 +122,7 @@ describe ApplicationController, type: :controller do
 
   describe 'request id' do
     before do
-      @request.env.merge!(admin_headers).merge!('cf.request_id' => 'expected-request-id')
+      @request.env.merge!(admin_headers)['cf.request_id'] = 'expected-request-id'
     end
 
     it 'sets the vcap request current_id from the passed in rack request during request handling' do

@@ -61,7 +61,7 @@ module VCAP::CloudController
           username         = @config[:internal_api][:auth_user]
           password         = @config[:internal_api][:auth_password]
           skip_cert_verify = @config[:skip_cert_verify]
-          use_ssl          = uri.scheme.to_s.downcase == 'https'
+          use_ssl          = uri.scheme.to_s.casecmp('https')
 
           uri.path = '/bulk_app_state'
 

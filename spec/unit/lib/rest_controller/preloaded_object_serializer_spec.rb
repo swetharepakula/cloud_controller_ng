@@ -95,7 +95,7 @@ module VCAP::CloudController
         test_model_many_to_many.add_test_model_second_level test_model_second_level
 
         hash = subject.serialize(TestModelsController, test_model, opts.merge(inline_relations_depth: 2))
-        expect(hash.fetch('entity').fetch('test_model_many_to_manies')).to eql([
+        expect(hash.fetch('entity').fetch('test_model_many_to_manies')).to eql([{
           'metadata' => {
             'guid' => test_model_many_to_many.guid,
             'url' => "/v2/test_model_many_to_manies/#{test_model_many_to_many.guid}",
@@ -106,16 +106,16 @@ module VCAP::CloudController
             'test_model_second_levels' => [
               {
                 'metadata' =>
-                {
-                  'guid' => test_model_second_level.guid,
-                  'url' => "/v2/test_model_second_levels/#{test_model_second_level.guid}",
-                  'created_at' => test_model_second_level.created_at
-                },
+                  {
+                    'guid' => test_model_second_level.guid,
+                    'url' => "/v2/test_model_second_levels/#{test_model_second_level.guid}",
+                    'created_at' => test_model_second_level.created_at
+                  },
                 'entity' => {}
               }
             ]
           }
-        ])
+        }])
       end
 
       describe 'orphan_relations enabled' do
@@ -184,7 +184,7 @@ module VCAP::CloudController
         test_model_many_to_many.add_test_model_second_level test_model_second_level
 
         hash = subject.serialize(TestModelsController, test_model, opts.merge(inline_relations_depth: 2, exclude_relations: 'test_model_second_levels'))
-        expect(hash.fetch('entity').fetch('test_model_many_to_manies')).to eql([
+        expect(hash.fetch('entity').fetch('test_model_many_to_manies')).to eql([{
           'metadata' => {
             'guid' => test_model_many_to_many.guid,
             'url' => "/v2/test_model_many_to_manies/#{test_model_many_to_many.guid}",
@@ -193,7 +193,7 @@ module VCAP::CloudController
           'entity' => {
             'test_model_second_levels_url' => "/v2/test_model_many_to_manies/#{test_model_many_to_many.guid}/test_model_second_levels"
           }
-        ])
+        }])
       end
 
       it 'only includes relations named in include_relations' do
@@ -204,7 +204,7 @@ module VCAP::CloudController
         test_model_many_to_many.add_test_model_second_level test_model_second_level
 
         hash = subject.serialize(TestModelsController, test_model, opts.merge(inline_relations_depth: 2, include_relations: 'test_model_many_to_manies'))
-        expect(hash.fetch('entity').fetch('test_model_many_to_manies')).to eql([
+        expect(hash.fetch('entity').fetch('test_model_many_to_manies')).to eql([{
           'metadata' => {
             'guid' => test_model_many_to_many.guid,
             'url' => "/v2/test_model_many_to_manies/#{test_model_many_to_many.guid}",
@@ -213,7 +213,7 @@ module VCAP::CloudController
           'entity' => {
             'test_model_second_levels_url' => "/v2/test_model_many_to_manies/#{test_model_many_to_many.guid}/test_model_second_levels"
           }
-        ])
+        }])
       end
     end
   end

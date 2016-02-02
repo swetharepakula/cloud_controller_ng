@@ -73,11 +73,11 @@ module VCAP::Services
             let(:call_method) do
               ->(response_parser, method_name, path, fake_response, service_param) do
                 if service_param
-                  if service_param == :syslog
-                    service = syslog_service
-                  else
-                    service = non_syslog_service
-                  end
+                  service = if service_param == :syslog
+                              syslog_service
+                            else
+                              non_syslog_service
+                            end
                   response_parser.send(method_name, path, fake_response, service_guid: service.guid)
                 else
                   response_parser.send(method_name, path, fake_response)
@@ -231,7 +231,7 @@ module VCAP::Services
         end
 
         def self.response_not_understood(expected_state, actual_state)
-          actual_state = (actual_state) ? "'#{actual_state}'" : 'null'
+          actual_state = actual_state ? "'#{actual_state}'" : 'null'
           'The service broker returned an invalid response for the request to service-broker.com/v2/service_instances/GUID: ' \
           "expected state was '#{expected_state}', broker returned #{actual_state}."
         end

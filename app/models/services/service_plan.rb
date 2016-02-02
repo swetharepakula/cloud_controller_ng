@@ -14,9 +14,9 @@ module VCAP::CloudController
 
     delegate :client, to: :service
 
-    alias_method :active?, :active
+    alias active? active
 
-    alias_method :broker_provided_id, :unique_id
+    alias broker_provided_id unique_id
 
     def validate
       validates_presence :name,                message: 'is required'
@@ -38,7 +38,7 @@ module VCAP::CloudController
 
     def self.user_visibility_filter(user)
       included_ids = ServicePlanVisibility.visible_private_plan_ids_for_user(user).
-                       concat(plan_ids_from_private_brokers(user))
+                     concat(plan_ids_from_private_brokers(user))
 
       Sequel.or(
         { public: true, id: included_ids }

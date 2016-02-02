@@ -22,13 +22,14 @@ module CloudFoundry
         if env['REQUEST_METHOD'] == 'OPTIONS'
           return call_app(env) unless %w(get put delete post).include?(env['HTTP_ACCESS_CONTROL_REQUEST_METHOD'].to_s.downcase)
 
-          preflight_headers.merge!({
-            'Content-Type' => 'text/plain',
-            'Access-Control-Allow-Methods' => 'GET,PUT,POST,DELETE',
-            'Access-Control-Max-Age'       => '900',
-            'Access-Control-Allow-Headers' => Set.new(['origin', 'content-type', 'authorization']).
-              merge(env['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'].to_s.split(',').map(&:strip).map(&:downcase)).to_a.join(',')
-          })
+          control_allow_headers =
+            Set.new(['origin', 'content-type', 'authorization']).
+            merge(env['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'].to_s.split(',').map(&:strip).map(&:downcase)).to_a.join(',')
+
+          preflight_headers['Content-Type'] = 'text/plain'
+          preflight_headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE'
+          preflight_headers['Access-Control-Max-Age'] = '900'
+          preflight_headers['Access-Control-Allow-Headers'] = control_allow_headers
         end
 
         return [200, preflight_headers, ''] if env['REQUEST_METHOD'] == 'OPTIONS'

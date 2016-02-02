@@ -15,9 +15,8 @@ module VCAP::CloudController
     controller_from_name(model_name.to_s.split('::').last)
   end
 
-  private
-
   def self.controller_from_name(name)
     VCAP::CloudController.const_get("#{name.to_s.pluralize.camelize}Controller")
   end
+  private_class_method :controller_from_name
 end

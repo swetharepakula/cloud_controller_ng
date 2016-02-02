@@ -438,6 +438,7 @@ module VCAP::CloudController
 
             it 'returns a ServiceBindingAppServiceTaken error' do
               make_request
+              p decoded_response
               expect(last_response.status).to eq(400)
               expect(decoded_response['error_code']).to eq('CF-ServiceBindingAppServiceTaken')
             end

@@ -2,7 +2,7 @@ module VCAP::CloudController
   class Domain < Sequel::Model
     class UnauthorizedAccessToPrivateDomain < RuntimeError; end
 
-    DOMAIN_REGEX = /^(([a-z0-9]|[a-z0-9][a-z0-9\-]{0,61}[a-z0-9])\.)+([a-z0-9]|[a-z0-9][a-z0-9\-]{0,61}[a-z0-9])$/ix.freeze
+    DOMAIN_REGEX = /^(([a-z0-9]|[a-z0-9][a-z0-9\-]{0,61}[a-z0-9])\.)+([a-z0-9]|[a-z0-9][a-z0-9\-]{0,61}[a-z0-9])$/ix
 
     dataset.row_proc = proc do |row|
       if row[:owning_organization_id]
@@ -124,10 +124,10 @@ module VCAP::CloudController
       shared_private_domains_filter = dataset.db[:organizations_private_domains].where(organization_id: organizations_filter).select(:private_domain_id)
 
       Sequel.or([
-        SHARED_DOMAIN_CONDITION.flatten,
-        [:owning_organization_id, organizations_filter],
-        [:id, shared_private_domains_filter]
-      ])
+                  SHARED_DOMAIN_CONDITION.flatten,
+                  [:owning_organization_id, organizations_filter],
+                  [:id, shared_private_domains_filter]
+                ])
     end
 
     def usable_by_organization?(org)

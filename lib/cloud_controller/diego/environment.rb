@@ -3,7 +3,7 @@ require 'presenters/system_env_presenter'
 module VCAP::CloudController
   module Diego
     class Environment
-      EXCLUDE = [:users]
+      EXCLUDE = [:users].freeze
 
       def initialize(app, initial_env={})
         @app = app
@@ -27,16 +27,6 @@ module VCAP::CloudController
         env
       end
 
-      private
-
-      attr_reader :app
-
-      def vcap_application
-        env = app.vcap_application
-        EXCLUDE.each { |k| env.delete(k) }
-        env
-      end
-
       def self.hash_to_diego_env(hash)
         hash.map do |k, v|
           case v
@@ -48,6 +38,16 @@ module VCAP::CloudController
 
           { 'name' => k, 'value' => v }
         end
+      end
+
+      private
+
+      attr_reader :app
+
+      def vcap_application
+        env = app.vcap_application
+        EXCLUDE.each { |k| env.delete(k) }
+        env
       end
 
       def add_hash_to_env(hash, env)

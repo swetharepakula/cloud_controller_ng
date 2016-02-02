@@ -26,7 +26,7 @@ module VCAP::CloudController::RestController
     end
 
     def descending?
-      @order_direction.downcase == 'desc'
+      @order_direction.casecmp('desc') == 0
     end
   end
 end

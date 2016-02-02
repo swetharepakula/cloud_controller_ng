@@ -11,6 +11,6 @@ module VCAP
       self.shift if size > @max_size
     end
 
-    alias_method :<<, :push
+    alias << push
   end
 end

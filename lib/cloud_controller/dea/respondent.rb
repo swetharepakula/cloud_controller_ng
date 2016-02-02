@@ -22,7 +22,7 @@ module VCAP::CloudController
       end
 
       def crashed_app?(decoded_message)
-        decoded_message['reason'] && decoded_message['reason'].downcase == 'crashed'
+        decoded_message['reason'] && decoded_message['reason'].casecmp('crashed') == 0
       end
 
       def process_droplet_exited_message(decoded_message)

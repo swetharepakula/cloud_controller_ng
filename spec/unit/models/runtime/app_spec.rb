@@ -2164,7 +2164,7 @@ module VCAP::CloudController
               app.add_route_by_guid(route_with_service.guid)
               app.save
             }.to raise_error(Errors::InvalidRouteRelation).
-            with_message("The requested route relation is invalid: #{route_with_service.guid} - Route services are only supported for apps on Diego")
+              with_message("The requested route relation is invalid: #{route_with_service.guid} - Route services are only supported for apps on Diego")
           end
         end
       end
@@ -2707,7 +2707,7 @@ module VCAP::CloudController
         end
 
         context 'when modifying multiple routes at one time' do
-          let(:routes) { 3.times.collect { Route.make domain: domain, space: subject.space } }
+          let(:routes) { Array.new(3) { Route.make domain: domain, space: subject.space } }
 
           before do
             allow(AppObserver).to receive(:updated).with(subject)

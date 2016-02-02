@@ -125,8 +125,8 @@ class PackagesController < ApplicationController
   def can_delete?(space_guid)
     roles.admin? || membership.has_any_roles?([Membership::SPACE_DEVELOPER], space_guid)
   end
-  alias_method :can_stage?, :can_delete?
-  alias_method :can_upload?, :can_delete?
+  alias can_stage? can_delete?
+  alias can_upload? can_delete?
 
   def package_not_found!
     resource_not_found!(:package)

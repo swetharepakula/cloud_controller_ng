@@ -3,7 +3,7 @@ require 'awesome_print'
 require 'rspec_api_documentation/dsl'
 
 resource 'Packages (Experimental)', type: :api do
-  let(:iso8601) { /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.freeze }
+  let(:iso8601) { /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/ }
   let(:tmpdir) { Dir.mktmpdir }
   let(:valid_zip) {
     zip_name = File.join(tmpdir, 'file.zip')
@@ -92,7 +92,7 @@ resource 'Packages (Experimental)', type: :api do
               'state'      => VCAP::CloudController::PackageModel::READY_STATE,
               'created_at' => iso8601,
               'updated_at' => nil,
-              'links'     => {
+              'links' => {
                 'self' => { 'href' => "/v3/packages/#{package2.guid}" },
                 'app'  => { 'href' => "/v3/apps/#{package2.app_guid}" },
                 'stage' => { 'href' => "/v3/packages/#{package2.guid}/droplets", 'method' => 'POST' },
@@ -195,7 +195,7 @@ resource 'Packages (Experimental)', type: :api do
           'state'      => 'READY',
           'created_at' => iso8601,
           'updated_at' => nil,
-          'links'     => {
+          'links' => {
             'self' => { 'href' => "/v3/packages/#{package.guid}" },
             'app'  => { 'href' => "/v3/apps/#{guid}" },
             'stage' => { 'href' => "/v3/packages/#{package.guid}/droplets", 'method' => 'POST' },
@@ -250,7 +250,7 @@ resource 'Packages (Experimental)', type: :api do
           'state'      => 'READY',
           'created_at' => iso8601,
           'updated_at' => nil,
-          'links'     => {
+          'links' => {
             'self' => { 'href' => "/v3/packages/#{package.guid}" },
             'app'  => { 'href' => "/v3/apps/#{guid}" },
             'stage' => { 'href' => "/v3/packages/#{package.guid}/droplets", 'method' => 'POST' },

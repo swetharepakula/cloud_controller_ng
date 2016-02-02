@@ -16,8 +16,7 @@ module VCAP::CloudController
     end
 
     before do
-      allow(CloudController::DependencyLocator.instance).to receive(:routing_api_client).
-                                                                and_return(routing_api_client)
+      allow(CloudController::DependencyLocator.instance).to receive(:routing_api_client).and_return(routing_api_client)
       allow(routing_api_client).to receive(:router_group).with(tcp_group_1).and_return(router_groups[0])
       allow(routing_api_client).to receive(:router_group).with(tcp_group_2).and_return(router_groups[1])
       allow(routing_api_client).to receive(:router_group).with(http_group).and_return(router_groups[2])
@@ -157,8 +156,7 @@ module VCAP::CloudController
       let(:user) { User.make }
 
       before do
-        allow(CloudController::DependencyLocator.instance).to receive(:routing_api_client).
-                                                                  and_return(routing_api_client)
+        allow(CloudController::DependencyLocator.instance).to receive(:routing_api_client).and_return(routing_api_client)
         allow(routing_api_client).to receive(:router_group).and_return(router_group)
       end
 
@@ -385,7 +383,7 @@ module VCAP::CloudController
 
                 expect(last_response).to have_status_code(400)
                 expect(decoded_response['description']).
-                    to include('Routes for this host and domain have been reserved for another space')
+                  to include('Routes for this host and domain have been reserved for another space')
               end
             end
           end
@@ -393,8 +391,7 @@ module VCAP::CloudController
 
         context 'domain is invalid' do
           before do
-            allow(tcp_route_validator).to receive(:validate).
-                                              and_raise(RouteValidator::DomainInvalid.new('domain error'))
+            allow(tcp_route_validator).to receive(:validate).and_raise(RouteValidator::DomainInvalid.new('domain error'))
           end
 
           it 'returns an error' do
@@ -412,8 +409,7 @@ module VCAP::CloudController
 
         context 'when the routing api client raises a UaaUnavailable error' do
           before do
-            allow(tcp_route_validator).to receive(:validate).
-                                              and_raise(RoutingApi::Client::UaaUnavailable)
+            allow(tcp_route_validator).to receive(:validate).and_raise(RoutingApi::Client::UaaUnavailable)
           end
 
           it 'returns a 503 Service Unavailable' do
@@ -426,8 +422,7 @@ module VCAP::CloudController
 
         context 'when the routing api client raises a RoutingApiUnavailable error' do
           before do
-            allow(tcp_route_validator).to receive(:validate).
-                                              and_raise(RoutingApi::Client::RoutingApiUnavailable)
+            allow(tcp_route_validator).to receive(:validate).and_raise(RoutingApi::Client::RoutingApiUnavailable)
           end
 
           it 'returns a 503 Service Unavailable' do
@@ -484,15 +479,15 @@ module VCAP::CloudController
               context 'generate_port is "false"' do
                 before do
                   allow(RouteValidator).to receive(:new).
-                                               with(routing_api_client, domain_guid, route_attrs).
-                                               and_raise(RouteValidator::RouteInvalid.new('For TCP routes you must specify a port or request a random one.'))
+                    with(routing_api_client, domain_guid, route_attrs).
+                    and_raise(RouteValidator::RouteInvalid.new('For TCP routes you must specify a port or request a random one.'))
                 end
 
                 it 'raise a error' do
                   post '/v2/routes?generate_port=false', MultiJson.dump(req), headers_for(user)
 
                   expect(last_response.status).to eq(400)
-                  expect(last_response.body).to include("#{no_port_error}")
+                  expect(last_response.body).to include(no_port_error.to_s)
                 end
               end
             end
@@ -512,7 +507,7 @@ module VCAP::CloudController
                   expect(last_response.status).to eq(201)
                   expect(last_response.body).to include("\"port\": #{generated_port}")
                   expect(last_response.headers).to include('X-CF-Warnings')
-                  expect(last_response.headers['X-CF-Warnings']).to include("#{port_override_warning}")
+                  expect(last_response.headers['X-CF-Warnings']).to include(port_override_warning.to_s)
                 end
               end
 
@@ -554,8 +549,7 @@ module VCAP::CloudController
 
         context 'when the TCP Route is not valid' do
           before do
-            allow(tcp_route_validator).to receive(:validate).
-                                              and_raise(RouteValidator::DomainInvalid.new('domain error'))
+            allow(tcp_route_validator).to receive(:validate).and_raise(RouteValidator::DomainInvalid.new('domain error'))
           end
 
           it 'returns an error' do
@@ -610,8 +604,7 @@ module VCAP::CloudController
           context 'when the routing api client raises a UaaUnavailable error' do
             let(:domain) { SharedDomain.make(router_group_guid: 'router-group') }
             before do
-              allow(tcp_route_validator).to receive(:validate).
-                                               and_raise(RoutingApi::Client::UaaUnavailable)
+              allow(tcp_route_validator).to receive(:validate).and_raise(RoutingApi::Client::UaaUnavailable)
             end
 
             it 'returns a 503 Service Unavailable' do
@@ -625,8 +618,7 @@ module VCAP::CloudController
           context 'when the routing api client raises a RoutingApiUnavailable error' do
             let(:domain) { SharedDomain.make(router_group_guid: 'router-group') }
             before do
-              allow(tcp_route_validator).to receive(:validate).
-                                               and_raise(RoutingApi::Client::RoutingApiUnavailable)
+              allow(tcp_route_validator).to receive(:validate).and_raise(RoutingApi::Client::RoutingApiUnavailable)
             end
 
             it 'returns a 503 Service Unavailable' do

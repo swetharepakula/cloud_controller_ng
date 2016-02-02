@@ -23,7 +23,7 @@ module CloudController
       end
 
       def local?
-        @connection_config[:provider].downcase == 'local'
+        @connection_config[:provider].casecmp('local')
       end
 
       def exists?(key)
