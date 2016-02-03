@@ -11,6 +11,8 @@ describe 'v3 service bindings' do
     VCAP::CloudController::RackAppBuilder.new.build test_config, request_metrics
   end
 
+  let(:iso8601) { /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.freeze }
+
   let(:user) { VCAP::CloudController::User.make }
 
   let(:user_headers) do
@@ -147,11 +149,13 @@ describe 'v3 service bindings' do
       post(
         '/v2/user_provided_service_instances',
         {
-          name:       'test_ups',
-          space_guid: space_guid,
-          credentials: {
+          name:             'test_ups',
+          space_guid:       space_guid,
+          credentials:      {
             'username': 'user_provided_username'
-          }
+          },
+          syslog_drain_url: 'syslog://drain.url.com'
+
         }.to_json,
         user_headers
       )
@@ -171,12 +175,40 @@ describe 'v3 service bindings' do
         }.to_json,
         user_headers
       )
-      service_binding_guid = MultiJson.load(last_response.body)['guid']
+
+      guid = VCAP::CloudController::ServiceBindingModel.last.guid
+
+      expected_response = {
+        'guid'       => guid,
+        'type'       => 'app',
+        'data'       => {
+          'credentials'      => {
+            'username' => 'user_provided_username'
+          },
+          'syslog_drain_url' => 'syslog://drain.url.com'
+        },
+        'created_at' => iso8601,
+        'updated_at' => nil,
+        'links'      => {
+          'self'             => {
+            'href' => "/v3/service_bindings/#{guid}"
+          },
+          'service_instance' => {
+            'href' => "/v2/service_instances/#{service_instance_guid}"
+          },
+          'app'              => {
+            'href' => "/v3/apps/#{app_guid}"
+          }
+        }
+      }
+
+      parsed_response = MultiJson.load(last_response.body)
 
       expect(last_response.status).to eq(201)
+      expect(parsed_response).to be_a_response_like(expected_response)
 
       get(
-        "/v3/service_bindings/#{service_binding_guid}",
+        "/v3/service_bindings/#{guid}",
         nil,
         user_headers
       )

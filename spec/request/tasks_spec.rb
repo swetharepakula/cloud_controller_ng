@@ -74,7 +74,7 @@ describe 'Tasks' do
         }
       }
 
-      parsed_response = JSON.load(last_response.body)
+      parsed_response = MultiJson.load(last_response.body)
 
       expect(last_response.status).to eq(202)
       expect(parsed_response).to be_a_response_like(expected_response)
@@ -82,7 +82,7 @@ describe 'Tasks' do
   end
 
   describe 'GET /v3/tasks/:guid' do
-    it 'returns a json representation of the task with the requested guid' do
+    it 'returns a MultiJson representation of the task with the requested guid' do
       task = VCAP::CloudController::TaskModel.make(
         name: 'task',
         command: 'echo task',
@@ -118,7 +118,7 @@ describe 'Tasks' do
         }
       }
 
-      parsed_response = JSON.load(last_response.body)
+      parsed_response = MultiJson.load(last_response.body)
 
       expect(last_response.status).to eq(200)
       expect(parsed_response).to be_a_response_like(expected_response)
@@ -126,7 +126,7 @@ describe 'Tasks' do
   end
 
   describe 'GET /v3/apps/:guid/tasks/:guid' do
-    it 'returns a json representation of the task with the requested guid' do
+    it 'returns a MultiJson representation of the task with the requested guid' do
       task = VCAP::CloudController::TaskModel.make(
         name:         'task',
         command:      'echo task',
@@ -162,7 +162,7 @@ describe 'Tasks' do
         }
       }
 
-      parsed_response = JSON.load(last_response.body)
+      parsed_response = MultiJson.load(last_response.body)
 
       expect(last_response.status).to eq(200)
       expect(parsed_response).to be_a_response_like(expected_response)
