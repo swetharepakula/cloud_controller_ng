@@ -6,7 +6,7 @@ module VCAP::CloudController
     let(:cc_addr) { '1.2.3.4' }
     let(:cc_port) { 5678 }
     let(:staging_user) { 'user' }
-    let(:staging_password) { 'password' }
+    let(:staging_password) { 'p@$$word' }
     let(:blobstore) do
       CloudController::DependencyLocator.instance.droplet_blobstore
     end
@@ -23,8 +23,8 @@ module VCAP::CloudController
           external_port: cc_port,
           staging: {
               auth: {
-                  user: staging_user,
-                  password: staging_password
+                  user: URI.escape(staging_user, "%#{URI::REGEXP::PATTERN::RESERVED}"),
+                  password: URI.escape(staging_password, "%#{URI::REGEXP::PATTERN::RESERVED}"),
               }
           },
           nginx: { use_nginx: true },

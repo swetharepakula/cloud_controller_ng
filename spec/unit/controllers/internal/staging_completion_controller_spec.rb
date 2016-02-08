@@ -22,6 +22,12 @@ module VCAP::CloudController
       }
     end
 
+    before do
+      @internal_user = 'internal_user'
+      @internal_password = 'internal_password'
+      authorize @internal_user, @internal_password
+    end
+
     context 'staging a v2 app' do
       def make_diego_app
         AppFactory.make.tap do |app|
@@ -47,12 +53,6 @@ module VCAP::CloudController
       let(:task_id) { staged_app.staging_task_id }
       let(:staging_guid) { Diego::StagingGuid.from_app(staged_app) }
       let(:url) { "/internal/staging/#{staging_guid}/completed" }
-
-      before do
-        @internal_user = 'internal_user'
-        @internal_password = 'internal_password'
-        authorize @internal_user, @internal_password
-      end
 
       describe 'authentication' do
         context 'when missing authentication' do
@@ -152,12 +152,6 @@ module VCAP::CloudController
       let(:droplet) { DropletModel.make(package_guid: package.guid, app_guid: staged_app.guid, state: 'PENDING') }
       let(:staging_guid) { droplet.guid }
 
-      before do
-        @internal_user = 'internal_user'
-        @internal_password = 'internal_password'
-        authorize @internal_user, @internal_password
-      end
-
       it 'calls the stager with the droplet and response' do
         expect_any_instance_of(Diego::V3::Stager).to receive(:staging_complete).with(droplet, staging_response)
 
@@ -218,6 +212,10 @@ module VCAP::CloudController
             allow_any_instance_of(Diego::V3::Stager).to receive(:staging_complete)
             post url, MultiJson.dump(staging_response)
             expect(last_response.status).to eq(200)
+          end
+
+          context 'when the credentials have special characters' do
+
           end
         end
       end

@@ -24,8 +24,9 @@ module VCAP::CloudController
     allow_unauthenticated_access
 
     authenticate_basic_auth("#{STAGING_PATH}/*") do
-      [VCAP::CloudController::Config.config[:staging][:auth][:user],
-       VCAP::CloudController::Config.config[:staging][:auth][:password]]
+      p "staging controller"
+      [URI.decode(VCAP::CloudController::Config.config[:staging][:auth][:user]),
+       URI.decode(VCAP::CloudController::Config.config[:staging][:auth][:password])]
     end
 
     attr_reader :config, :blobstore, :buildpack_cache_blobstore, :package_blobstore

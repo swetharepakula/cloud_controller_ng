@@ -103,7 +103,7 @@ staging:
   minimum_staging_disk_mb: 4096
   auth:
     user: zxsfhgjg
-    password: ZNVfdase9
+    password: "@ZNVfdase9"
 
 quota_definitions:
   default:

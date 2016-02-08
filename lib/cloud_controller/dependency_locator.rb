@@ -121,6 +121,7 @@ module CloudController
     end
 
     def blobstore_url_generator
+      p "blobstore url generator"
       connection_options = {
         blobstore_host: @config[:internal_service_hostname],
         blobstore_port: @config[:external_port],
