@@ -11,9 +11,9 @@ module VCAP::CloudController
 
     let(:router_groups) do
       [
-        RoutingApi::RouterGroup.new({ 'guid' => tcp_group_1, 'type' => 'tcp' }),
-        RoutingApi::RouterGroup.new({ 'guid' => tcp_group_2, 'type' => 'tcp' }),
-        RoutingApi::RouterGroup.new({ 'guid' => http_group, 'type' => 'http' }),
+        RoutingApi::RouterGroup.new({ 'guid' => tcp_group_1, 'types' => ['tcp'] }),
+        RoutingApi::RouterGroup.new({ 'guid' => tcp_group_2, 'types' => ['tcp'] }),
+        RoutingApi::RouterGroup.new({ 'guid' => http_group, 'types' => ['http'] }),
       ]
     end
     let(:app_event_repository) { instance_double(Repositories::Runtime::AppEventRepository) }
@@ -156,7 +156,7 @@ module VCAP::CloudController
       let(:router_group) {
         RoutingApi::RouterGroup.new({
                                         'guid' => 'tcp-guid',
-                                        'type' => 'tcp',
+                                        'types' => ['tcp'],
                                     })
       }
       let(:user) { User.make }
@@ -638,7 +638,7 @@ module VCAP::CloudController
               port: new_port,
           } }
 
-          context 'with a domain with a router_group_guid and type tcp' do
+          context 'with a domain with a router_group_guid and types with tcp' do
             let(:domain) { SharedDomain.make(router_group_guid: tcp_group_1) }
 
             it 'updates the route' do

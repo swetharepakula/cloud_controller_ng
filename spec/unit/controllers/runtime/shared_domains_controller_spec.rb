@@ -52,15 +52,15 @@ module VCAP::CloudController
 
         let(:router_groups) do
           [
-            RoutingApi::RouterGroup.new({ 'guid' => 'router-group-guid1', 'type' => 'tcp' }),
-            RoutingApi::RouterGroup.new({ 'guid' => 'random-guid-2', 'type' => 'tcp' }),
+            RoutingApi::RouterGroup.new({ 'guid' => 'router-group-guid1', 'types' => ['tcp'] }),
+            RoutingApi::RouterGroup.new({ 'guid' => 'random-guid-2', 'types' => ['tcp'] }),
           ]
         end
 
         before do
           allow(routing_api_client).to receive(:router_groups).and_return(router_groups)
           allow(routing_api_client).to receive(:router_group).with('router-group-guid1').
-                                           and_return(RoutingApi::RouterGroup.new({ 'guid' => 'router-group-guid1', 'type' => 'tcp' }))
+                                           and_return(RoutingApi::RouterGroup.new({ 'guid' => 'router-group-guid1', 'types' => ['tcp'] }))
         end
 
         it 'validates that the router_group_guid is a valid guid for a Router Group' do

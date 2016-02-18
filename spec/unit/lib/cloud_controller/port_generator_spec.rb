@@ -3,8 +3,8 @@ require 'spec_helper'
 module VCAP::CloudController
   describe PortGenerator do
     let(:routing_api_client) { double('routing_api_client', router_group: router_group1) }
-    let(:router_group1) { double('router_group1', type: router_group_type, guid: router_group_guid1) }
-    let(:router_group_type) { 'tcp' }
+    let(:router_group1) { double('router_group1', types: router_group_types, guid: router_group_guid1) }
+    let(:router_group_types) { ['tcp'] }
     let(:router_group_guid1) { 'router-group-guid1' }
 
     let(:domain_guid1) { domain1.guid }
@@ -30,7 +30,7 @@ module VCAP::CloudController
 
       context 'when there are multi router groups' do
         let(:router_group_guid2) { 'router-group-guid2' }
-        let(:router_group2) { double('router_group2', type: router_group_type, guid: router_group_guid2) }
+        let(:router_group2) { double('router_group2', types: router_group_types, guid: router_group_guid2) }
 
         let(:domain2) { SharedDomain.make(router_group_guid: router_group_guid2) }
         let(:generator2) { PortGenerator.new({ 'domain_guid' => domain2.guid }) }

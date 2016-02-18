@@ -11,8 +11,8 @@ module VCAP::CloudController
     let(:domains) { [domain1, domain2, domain3, domain4] }
 
     before do
-      allow(routing_api_client).to receive(:router_groups).and_return([RoutingApi::RouterGroup.new({ 'guid' => 'guid1', 'type' => 'tcp' }),
-                                                                       RoutingApi::RouterGroup.new({ 'guid' => 'guid2', 'type' => 'http' })])
+      allow(routing_api_client).to receive(:router_groups).and_return([RoutingApi::RouterGroup.new({ 'guid' => 'guid1', 'types' => ['tcp'] }),
+                                                                       RoutingApi::RouterGroup.new({ 'guid' => 'guid2', 'types' => ['http'] })])
     end
 
     describe 'transform' do

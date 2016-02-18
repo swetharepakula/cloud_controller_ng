@@ -14,7 +14,7 @@ resource 'Routes', type: [:api, :legacy_api] do
   let(:router_group) {
     VCAP::CloudController::RoutingApi::RouterGroup.new({
                                                            'guid' => 'tcp-guid',
-                                                           'type' => 'tcp',
+                                                           'types' => ['tcp'],
                                                        })
   }
   before do

@@ -3,8 +3,7 @@ module VCAP::CloudController::RoutingApi
     attr_reader :guid, :types
     def initialize(hash)
       @guid = hash['guid']
-      @types = []
-      @types.push(hash['type'])
+      @types = hash['types']
     end
 
     def ==(other)
