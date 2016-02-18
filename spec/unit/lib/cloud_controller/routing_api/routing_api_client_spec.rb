@@ -27,8 +27,8 @@ module VCAP::CloudController::RoutingApi
       let(:status) { 200 }
       let(:body) do
         [
-          { guid: 'random-guid-1', name: 'group-name', type: 'tcp' },
-          { guid: 'random-guid-2', name: 'group-name', type: 'tcp' },
+          { guid: 'random-guid-1', name: 'group-name', types: ['tcp'] },
+          { guid: 'random-guid-2', name: 'group-name', types: ['tcp'] },
         ].to_json
       end
 
@@ -166,8 +166,8 @@ module VCAP::CloudController::RoutingApi
       let(:status) { 200 }
       let(:body) do
         [
-          { guid: 'random-guid-1', name: 'group-name', type: 'tcp' },
-          { guid: 'router-group-guid', name: 'group-name', type: 'my-type' },
+          { guid: 'random-guid-1', name: 'group-name', types: ['tcp'] },
+          { guid: 'router-group-guid', name: 'group-name', types: ['my-type'] },
         ].to_json
       end
 
