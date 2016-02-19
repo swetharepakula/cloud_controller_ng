@@ -27,13 +27,15 @@ module CloudController
       let(:buildpack_cache_blobstore) { double(local?: true) }
       let(:admin_buildpack_blobstore) { double(local?: true) }
       let(:droplet_blobstore) { double(local?: true) }
+      let(:bits_client) { nil }
 
       subject(:url_generator) do
         UrlGenerator.new(connection_options,
                          package_blobstore,
                          buildpack_cache_blobstore,
                          admin_buildpack_blobstore,
-                         droplet_blobstore)
+                         droplet_blobstore,
+                         bits_client)
       end
 
       let(:app) { VCAP::CloudController::AppFactory.make }
@@ -146,6 +148,25 @@ module CloudController
               it 'returns nil' do
                 expect(url_generator.admin_buildpack_download_url(buildpack)).to be_nil
               end
+            end
+          end
+
+          context 'when bits-service is being used' do
+            let(:bits_client) { double(:bits_client) }
+
+            it 'calls bits_client for the download url' do
+              expect(bits_client).to receive(:download_url).
+                with(:buildpacks, buildpack.key)
+
+              url_generator.admin_buildpack_download_url(buildpack)
+            end
+
+            it 'returns the download_url from the bits_client' do
+              allow(bits_client).to receive(:download_url).
+                and_return('https://test.com/download-1')
+
+              expect(url_generator.admin_buildpack_download_url(buildpack)).
+                to eq('https://test.com/download-1')
             end
           end
 

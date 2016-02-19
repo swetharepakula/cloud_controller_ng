@@ -194,6 +194,46 @@ describe CloudController::DependencyLocator do
       TestConfig.override(my_config)
     end
 
+    context 'when bits_service is enabled' do
+      let(:my_config) do
+        {
+          internal_service_hostname: internal_service_hostname,
+          external_host: 'external.host',
+          bits_service: {
+            enabled: true,
+            endpoint: 'https://bits-service.com'
+          },
+          external_port: 8282,
+          staging: {
+            auth: {
+              user: 'username',
+              password: 'password',
+            }
+          }
+        }
+      end
+
+      it 'creates blobstore_url_generator with the external host, port, and blobstores' do
+        TestConfig.override(my_config)
+
+        connection_options = {
+          blobstore_host: 'external.host',
+          blobstore_port: 8282,
+          user: 'username',
+          password: 'password'
+        }
+        expect(CloudController::Blobstore::UrlGenerator).to receive(:new).
+            with(hash_including(connection_options),
+              instance_of(CloudController::Blobstore::Client),
+              instance_of(CloudController::Blobstore::Client),
+              instance_of(CloudController::Blobstore::Client),
+              instance_of(CloudController::Blobstore::Client),
+              instance_of(BitsClient)
+            )
+        locator.blobstore_url_generator
+      end
+    end
+
     context 'when called without an argument' do
       it 'creates blobstore_url_generator with the external host, port, and blobstores' do
         connection_options = {
@@ -207,7 +247,8 @@ describe CloudController::DependencyLocator do
               instance_of(CloudController::Blobstore::Client),
               instance_of(CloudController::Blobstore::Client),
               instance_of(CloudController::Blobstore::Client),
-              instance_of(CloudController::Blobstore::Client)
+              instance_of(CloudController::Blobstore::Client),
+              nil
             )
         locator.blobstore_url_generator
       end
@@ -228,7 +269,8 @@ describe CloudController::DependencyLocator do
               instance_of(CloudController::Blobstore::Client),
               instance_of(CloudController::Blobstore::Client),
               instance_of(CloudController::Blobstore::Client),
-              instance_of(CloudController::Blobstore::Client)
+              instance_of(CloudController::Blobstore::Client),
+              nil
             ).twice
         locator.blobstore_url_generator(true)
         locator.blobstore_url_generator(false)
@@ -251,7 +293,8 @@ describe CloudController::DependencyLocator do
                 instance_of(CloudController::Blobstore::Client),
                 instance_of(CloudController::Blobstore::Client),
                 instance_of(CloudController::Blobstore::Client),
-                instance_of(CloudController::Blobstore::Client)
+                instance_of(CloudController::Blobstore::Client),
+                nil
               )
           locator.blobstore_url_generator(true)
         end
@@ -270,7 +313,8 @@ describe CloudController::DependencyLocator do
                 instance_of(CloudController::Blobstore::Client),
                 instance_of(CloudController::Blobstore::Client),
                 instance_of(CloudController::Blobstore::Client),
-                instance_of(CloudController::Blobstore::Client)
+                instance_of(CloudController::Blobstore::Client),
+                nil
               )
           locator.blobstore_url_generator(false)
         end

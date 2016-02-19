@@ -1,12 +1,13 @@
 module CloudController
   module Blobstore
     class UrlGenerator
-      def initialize(blobstore_options, package_blobstore, buildpack_cache_blobstore, admin_buildpack_blobstore, droplet_blobstore)
+      def initialize(blobstore_options, package_blobstore, buildpack_cache_blobstore, admin_buildpack_blobstore, droplet_blobstore, bits_client=nil)
         @blobstore_options = blobstore_options
         @package_blobstore = package_blobstore
         @buildpack_cache_blobstore = buildpack_cache_blobstore
         @admin_buildpack_blobstore = admin_buildpack_blobstore
         @droplet_blobstore = droplet_blobstore
+        @bits_client = bits_client
       end
 
       # Downloads
@@ -27,6 +28,8 @@ module CloudController
       end
 
       def admin_buildpack_download_url(buildpack)
+        return @bits_client.download_url(:buildpacks, buildpack.key) if use_bits_service?
+
         generate_download_url(@admin_buildpack_blobstore, "/v2/buildpacks/#{buildpack.guid}/download", buildpack.key)
       end
 
@@ -77,6 +80,10 @@ module CloudController
       end
 
       private
+
+      def use_bits_service?
+        !!@bits_client
+      end
 
       def generate_download_url(store, path, blobstore_key)
         uri = store.download_uri(blobstore_key)
