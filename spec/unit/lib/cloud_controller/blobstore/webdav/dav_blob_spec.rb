@@ -10,7 +10,7 @@ module CloudController
       let(:signer) do
         NginxSecureLinkSigner.new(
           secret:               'some-secret',
-          internal_host:        'http://blobstore.private.com',
+          internal_host:        'https://blobstore.private.com',
           internal_path_prefix: '/read',
           public_host:          'https://blobstore.public.com',
           public_path_prefix:   '/read'
@@ -47,7 +47,7 @@ module CloudController
           # using nginx method defined here: http://nginx.org/en/docs/http/ngx_http_secure_link_module.html
 
           Timecop.freeze(Time.utc(2008, 1, 1, 12, 0, 0)) do
-            expect(blob.internal_download_url).to eq('http://blobstore.private.com/read/fo/ob/foobar?expires=1199192400&md5=3RBuMi1CauNAw8thvmZfPw')
+            expect(blob.internal_download_url).to eq('https://blobstore.private.com/read/fo/ob/foobar?expires=1199192400&md5=3RBuMi1CauNAw8thvmZfPw')
           end
         end
       end

@@ -16,9 +16,12 @@ module CloudController
       end
       let(:directory_key) { 'droplets' }
       let(:root_dir) { nil }
+      let(:ssl_config) { double(:ssl_config, :verify_mode= => nil) }
 
       before do
         allow(HTTPClient).to receive_messages(new: httpclient)
+        allow(httpclient).to receive_messages(ssl_config: ssl_config)
+        allow(ssl_config).to receive(:set_default_paths)
       end
 
       describe 'conforms to blobstore client interface' do
@@ -32,6 +35,26 @@ module CloudController
         end
 
         it_behaves_like 'a blobstore client'
+      end
+
+      describe 'ssl config' do
+        before do
+          TestConfig.override(skip_cert_verify: skip_cert)
+          allow(subject).to receive(:new)
+        end
+        context 'when skip_cert_verify is true' do
+          let(:skip_cert) { true }
+          it 'lackadaisically accepts the connection with the blobstore' do
+            expect(ssl_config).to have_received(:verify_mode=).with(OpenSSL::SSL::VERIFY_NONE)
+          end
+        end
+
+        context 'when skip_cert_verify is false' do
+          let(:skip_cert) { false }
+          it 'accepts a connection with the blobstore by checking the cert' do
+            expect(ssl_config).to have_received(:verify_mode=).with(OpenSSL::SSL::VERIFY_PEER)
+          end
+        end
       end
 
       describe 'basic auth' do

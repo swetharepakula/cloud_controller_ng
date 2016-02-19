@@ -13,7 +13,7 @@ module CloudController
         path       = File.join([@internal_path_prefix, path].compact)
         md5        = generate_md5(@secret, expires, path)
         url        = URI(@internal_host)
-        url.scheme = 'http'
+        url.scheme = 'https'
         url.path   = path
         url.query  = { md5: md5, expires: expires }.to_query
         url.to_s

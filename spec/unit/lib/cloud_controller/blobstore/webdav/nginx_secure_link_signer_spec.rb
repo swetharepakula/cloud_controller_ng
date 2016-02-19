@@ -27,7 +27,7 @@ module CloudController
       describe '#sign_internal_url' do
         it 'signs the url with the internal host' do
           signed_url = signer.sign_internal_url(expires: expires, path: '/some/path')
-          expect(signed_url).to eq('http://internal.example.com/some/path?expires=16726859876&md5=xSItWNqj4f9yoP8ZHFPgnw')
+          expect(signed_url).to eq('https://internal.example.com/some/path?expires=16726859876&md5=xSItWNqj4f9yoP8ZHFPgnw')
         end
 
         context 'when internal_path_prefix is configured' do
@@ -35,7 +35,7 @@ module CloudController
 
           it 'signs the url with the path prefix' do
             signed_url = signer.sign_internal_url(expires: expires, path: '/some/path')
-            expect(signed_url).to eq('http://internal.example.com/read/directory/some/path?expires=16726859876&md5=4bqEMqjriNxgNVZH8NRtRg')
+            expect(signed_url).to eq('https://internal.example.com/read/directory/some/path?expires=16726859876&md5=4bqEMqjriNxgNVZH8NRtRg')
           end
         end
       end
