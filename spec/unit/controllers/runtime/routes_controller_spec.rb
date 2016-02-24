@@ -278,6 +278,13 @@ module VCAP::CloudController
         expect(last_response.status).to eq(400)
         expect(decoded_response['code']).to eq(130004)
       end
+
+      it 'returns an appropriate error when host is missing for shared domain' do
+        post '/v2/routes', MultiJson.dump(domain_guid: http_domain.guid, space_guid: space.guid), json_headers(admin_headers)
+
+        expect(last_response.status).to eq(400)
+        expect(decoded_response['description']).to include('Host is required for shared domains')
+      end
     end
 
     describe 'Associations' do

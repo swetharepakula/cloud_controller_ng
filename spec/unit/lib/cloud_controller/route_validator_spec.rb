@@ -160,5 +160,26 @@ module VCAP::CloudController
             to raise_error(RoutingApi::Client::RoutingApiUnavailable)
       end
     end
+
+    context 'when creating a route with no host' do
+      let(:host) { nil }
+      let(:port) { nil }
+
+      context 'on a shared domain' do
+        let(:domain) { SharedDomain.make }
+        it 'raises a RouteInvalid error' do
+          expect { validator.validate }.
+            to raise_error(RouteValidator::RouteInvalid, 'Host is required for shared domains')
+        end
+      end
+
+      context 'on a private domain' do
+        let(:domain) { PrivateDomain.make }
+
+        it 'does not raise an error' do
+          expect { validator.validate }.not_to raise_error
+        end
+      end
+    end
   end
 end

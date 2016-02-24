@@ -31,6 +31,7 @@ module VCAP::CloudController
         validate_port_number
       else
         validate_port_not_included
+        validate_host_included_if_shared_domain
       end
     end
 
@@ -83,6 +84,12 @@ module VCAP::CloudController
     def validate_port_not_taken
       if port_taken?(port, domain.router_group_guid)
         raise RoutePortTaken.new(port_taken_error_message(port))
+      end
+    end
+
+    def validate_host_included_if_shared_domain
+      if domain.shared? && host.blank?
+        raise RouteInvalid.new('Host is required for shared domains')
       end
     end
 
