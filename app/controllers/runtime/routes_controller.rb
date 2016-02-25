@@ -163,7 +163,7 @@ module VCAP::CloudController
       domain_guid = request_attrs['domain_guid']
       return if domain_guid.nil?
 
-      validate_route(domain_guid)
+      validate_route_create(domain_guid)
     end
 
     def after_create(route)
@@ -175,7 +175,7 @@ module VCAP::CloudController
 
       return if request_attrs['app']
 
-      validate_route(route.domain.guid) if request_attrs['port'] != route.port
+      validate_route_update(route) if request_attrs['port'] != route.port
     end
 
     def after_update(route)
@@ -204,9 +204,23 @@ module VCAP::CloudController
       flag == 'true'
     end
 
-    def validate_route(domain_guid)
-      RouteValidator.new(@routing_api_client, domain_guid, assemble_route_attrs).validate
+    def validate_route_create(domain_guid)
+      RouteCreateValidator.new(@routing_api_client, domain_guid, assemble_route_attrs).validate
     rescue RouteValidator::ValidationError => e
+      raise Errors::ApiError.new_from_details(e.class.name.demodulize, e.message)
+    rescue RouteCreateValidator::ValidationError => e
+      raise Errors::ApiError.new_from_details(e.class.name.demodulize, e.message)
+    rescue RoutingApi::Client::RoutingApiUnavailable
+      raise Errors::ApiError.new_from_details('RoutingApiUnavailable')
+    rescue RoutingApi::Client::UaaUnavailable
+      raise Errors::ApiError.new_from_details('UaaUnavailable')
+    end
+
+    def validate_route_update(route)
+      RouteUpdateValidator.new(@routing_api_client, assemble_route_attrs, route).validate
+    rescue RouteValidator::ValidationError => e
+      raise Errors::ApiError.new_from_details(e.class.name.demodulize, e.message)
+    rescue RouteUpdateValidator::ValidationError => e
       raise Errors::ApiError.new_from_details(e.class.name.demodulize, e.message)
     rescue RoutingApi::Client::RoutingApiUnavailable
       raise Errors::ApiError.new_from_details('RoutingApiUnavailable')

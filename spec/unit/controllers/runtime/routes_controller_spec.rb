@@ -1,5 +1,4 @@
 require 'spec_helper'
-
 module VCAP::CloudController
   describe VCAP::CloudController::RoutesController do
     let(:routing_api_client) { double('routing_api_client') }
@@ -282,6 +281,7 @@ module VCAP::CloudController
       it 'returns an appropriate error when host is missing for shared domain' do
         post '/v2/routes', MultiJson.dump(domain_guid: http_domain.guid, space_guid: space.guid), json_headers(admin_headers)
 
+        p last_response.body
         expect(last_response.status).to eq(400)
         expect(decoded_response['description']).to include('Host is required for shared domains')
       end
@@ -402,13 +402,13 @@ module VCAP::CloudController
           path: ''
       } }
       let(:route_attrs) { { 'port' => port, 'host' => host, 'path' => '' } }
-      let(:tcp_route_validator) { double('tcp_route_validator', validate: nil) }
+      let(:tcp_route_validator) { instance_double(RouteCreateValidator, 'tcp_route_validator', validate: nil) }
 
       before do
         allow(route_event_repository).to receive(:record_route_create)
         space.organization.add_user(user)
         space.add_developer(user)
-        allow(RouteValidator).to receive(:new).with(routing_api_client, domain_guid, route_attrs).and_return(tcp_route_validator)
+        allow(RouteCreateValidator).to receive(:new).with(routing_api_client, domain_guid, route_attrs).and_return(tcp_route_validator)
       end
 
       context 'when the domain is a HTTP Domain' do
@@ -542,14 +542,15 @@ module VCAP::CloudController
 
               context 'generate_port is "false"' do
                 before do
-                  allow(RouteValidator).to receive(:new).
+                  allow(RouteCreateValidator).to receive(:new).
                                                with(routing_api_client, domain_guid, route_attrs).
-                                               and_raise(RouteValidator::RouteInvalid.new('For TCP routes you must specify a port or request a random one.'))
+                                               and_raise(RouteCreateValidator::RouteInvalid.new('For TCP routes you must specify a port or request a random one.'))
                 end
 
                 it 'raise a error' do
                   post '/v2/routes?generate_port=false', MultiJson.dump(req), headers_for(user)
 
+                  p last_response.body
                   expect(last_response.status).to eq(400)
                   expect(last_response.body).to include("#{no_port_error}")
                 end
@@ -594,14 +595,7 @@ module VCAP::CloudController
       let(:user) { User.make }
       let(:domain) { SharedDomain.make }
       let(:domain_guid) { domain.guid }
-      let(:tcp_route_validator) { double(:tcp_route_validator, validate: nil) }
-
-      before do
-        space.organization.add_user(user)
-        space.add_developer(user)
-        allow(RouteValidator).to receive(:new).with(routing_api_client, domain_guid, route_attrs).and_return(tcp_route_validator)
-        allow(route_event_repository).to receive(:record_route_update)
-      end
+      let(:tcp_route_validator) { instance_double(RouteUpdateValidator, :tcp_route_validator, validate: nil) }
 
       describe 'tcp routes' do
         let(:port) { 18000 }
@@ -611,6 +605,13 @@ module VCAP::CloudController
           port: new_port,
         } }
         let(:route_attrs) { { 'port' => new_port, 'host' => nil, 'path' => nil } }
+
+        before do
+          space.organization.add_user(user)
+          space.add_developer(user)
+          allow(RouteUpdateValidator).to receive(:new).with(routing_api_client, route_attrs, route).and_return(tcp_route_validator)
+          allow(route_event_repository).to receive(:record_route_update)
+        end
 
         context 'when the TCP Route is not valid' do
           before do
@@ -695,6 +696,23 @@ module VCAP::CloudController
               expect(last_response).to have_status_code(503)
               expect(last_response.body).to include 'Routing API is currently unavailable'
             end
+          end
+        end
+      end
+
+      describe 'shared domains' do
+        let(:route) { Route.make(domain: domain, space: space, host: 'any-host') }
+        let(:req) { { path: '/some/new/path' } }
+
+        before do
+          allow(route_event_repository).to receive(:record_route_update)
+        end
+
+        context 'when updating' do
+          it 'should not raise an error when the host is missing' do
+            put "/v2/routes/#{route.guid}", MultiJson.dump(req), admin_headers
+
+            expect(last_response).to have_status_code(201)
           end
         end
       end
